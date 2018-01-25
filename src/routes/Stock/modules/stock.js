@@ -44,7 +44,7 @@ export default (state = initialState, action) => {
         isFetching: true,
         data: null,
         hasError: false,
-        errorMessage: false
+        errorMessage: null
       })
 
     case FETCHING_STOCK_DATA_SUCCESS:
@@ -52,7 +52,7 @@ export default (state = initialState, action) => {
         isFetching: false,
         data: action.payload,
         hasError: false,
-        errorMessage: false
+        errorMessage: null
       })
 
     case FETCHING_STOCK_DATA_FAILED:
