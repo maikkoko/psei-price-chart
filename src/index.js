@@ -2,6 +2,7 @@ import React from 'react'
 import { render } from 'react-dom'
 import createStore from './store/createStore'
 import registerServiceWorker from './lib/registerServiceWorker'
+import './lib/reactotron'
 
 const store = createStore()
 const App = require('./containers/App').default
