@@ -1,44 +1,30 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import GetStock from 'lib/api'
 
 class Stock extends Component {
   static propTypes = {
-    match: PropTypes.object
-  }
-
-  // Convert to redux
-  state = {
-    isValid: true,
-    stock: null
+    match: PropTypes.object,
+    fetchStockData: PropTypes.func.isRequired,
+    isFetching: PropTypes.bool,
+    data: PropTypes.array,
+    hasError: PropTypes.bool,
+    errorMessage: PropTypes.string
   }
 
   componentDidMount() {
     const { params } = this.props.match
 
-    GetStock(params.symbol)
-      .then(response => {
-        console.log(response.data)
-        this.setState({
-          stock: response.data.stock[0]
-        })
-      })
-      .catch(error => {
-        console.log(error.message)
-        this.setState({
-          isValid: false
-        })
-      })
+    this.props.fetchStockData(params.symbol)
   }
 
   render() {
-    const { isValid, stock } = this.state
+    const { isFetching } = this.props
 
-    if (!isValid) {
+    if (isFetching) {
       return (
         <div>
           <h2>Stock</h2>
-          <p>404 Not Found</p>
+          <p>Loading...</p>
         </div>
       )
     }
@@ -46,8 +32,7 @@ class Stock extends Component {
     return (
       <div>
         <h2>Stock</h2>
-        <p>{stock ? stock.name : ''}</p>
-        <p>{stock ? stock.price.currency + stock.price.amount : ''}</p>
+        <p>Fetch Success</p>
       </div>
     )
   }

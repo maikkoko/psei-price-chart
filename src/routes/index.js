@@ -13,7 +13,7 @@ export const createRoutes = store => (
     <Switch>
       <Route path="/" exact component={Home} />
       <Route path="/counter" exact component={Counter(store)} />
-      <Route path={'/:symbol'} component={Stock} />
+      <Route path={'/:symbol'} component={Stock(store)} />
       <Route component={NotFound} />
     </Switch>
   </CoreLayout>

@@ -1,7 +1,28 @@
+import { injectReducer } from '../../store/reducers'
 import asyncComponent from '../../containers/AsyncComponent'
 
-const AsyncHome = asyncComponent(() =>
-  import(/* webpackChunkName: "stock" */ './components/Stock')
-)
+export default store =>
+  asyncComponent(
+    () =>
+      new Promise(resolve => {
+        /*  Webpack - use 'require.ensure' to create a split point
+  and embed an async module loader (jsonp) when bundling   */
+        require.ensure(
+          [],
+          require => {
+            /*  Webpack - use require callback to define
+    dependencies for bundling   */
+            const Counter = require('./containers/Stock').default
+            const reducer = require('./modules/stock').default
 
-export default AsyncHome
+            /*  Add the reducer to the store on key 'counter'  */
+            injectReducer(store, { key: 'stock', reducer })
+
+            /*  Return getComponent   */
+            resolve(Counter)
+            /* Webpack named bundle   */
+          },
+          'stock'
+        )
+      })
+  )

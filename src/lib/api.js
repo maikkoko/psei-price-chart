@@ -1,17 +1,29 @@
 import axios from 'axios'
+import moment from 'moment'
 
 const BASE_URL = 'http://phisix-api.appspot.com/stocks/'
 
-export function getMultipleStocsk() {
+export default function getStockData(symbol) {
   let requests = []
 
-  requests.push(axios.get(BASE_URL + 'BPI.json').catch(e => e))
-  requests.push(axios.get(BASE_URL + 'BDO.json').catch(e => e))
-  requests.push(axios.get(BASE_URL + 'maikko.json').catch(e => e))
+  getRequestDates().forEach(date => {
+    requests.push(
+      axios.get(BASE_URL + symbol + '.' + date + '.json').catch(e => e)
+    )
+  })
 
   return Promise.all(requests)
 }
 
-export default function getStock(symbol) {
-  return axios.get(BASE_URL + symbol + '.json')
+function getRequestDates() {
+  let dateStart = moment().subtract(29, 'day')
+  let dateEnd = moment()
+  let requestDates = []
+
+  while (dateEnd > dateStart) {
+    requestDates.push(dateStart.format('YYYY-MM-DD'))
+    dateStart.add(1, 'day')
+  }
+
+  return requestDates
 }
